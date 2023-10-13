@@ -37,11 +37,6 @@ jobs:
         id: init
         run: terraform init
         working-directory: ${{ env.WORKING_DIRECTORY }}
-#        env:
-#          AWS_ACCESS_KEY_ID: ${{ secrets.SCW_ACCESS_KEY_ID }}
-#          AWS_SECRET_ACCESS_KEY: ${{ secrets.SCW_ACCESS_KEY }}
-#          SCW_ACCESS_KEY_ID: ${{ secrets.SCW_ACCESS_KEY_ID }}
-#          SCW_SECRET_ACCESS_KEY: ${{ secrets.SCW_ACCESS_KEY }}
 
       - name: Terraform Validate
         id: validate
