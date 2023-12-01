@@ -144,4 +144,4 @@ override.tf.json
 .terraformrc
 terraform.rc
 
-certs
+packages/infrastructure/project/certs/server.*
