@@ -14,3 +14,9 @@ variable "project_id" {
   type        = string
   description = "Your project ID."
 }
+
+variable "domain_name" {
+  type        = string
+  default     = "hollynetes.fr"
+  description = "Domain name to use for the cluster."
+}
