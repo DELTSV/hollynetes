@@ -36,7 +36,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: app-namespace/backend
+          images: backend
           tags: |
             latest
             type=sha
