@@ -10,10 +10,10 @@ resource "kubernetes_ingress_v1" "app_ingress" {
     name = "app-ingress"
 
     annotations = {
-      "nginx.ingress.kubernetes.io/ssl-redirect" = "true"
-      "nginx.ingress.kubernetes.io/ssl-passthrough" : "false"
-      "nginx.ingress.kubernetes.io/use-regex"      = "true"
-      "nginx.ingress.kubernetes.io/rewrite-target" = "/$2"
+      "nginx.ingress.kubernetes.io/ssl-redirect"    = "true"
+      "nginx.ingress.kubernetes.io/ssl-passthrough" = "false"
+      "nginx.ingress.kubernetes.io/use-regex"       = "true"
+      "nginx.ingress.kubernetes.io/rewrite-target"  = "/$2"
     }
   }
 
