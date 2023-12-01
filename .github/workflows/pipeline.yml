@@ -16,16 +16,17 @@ env:
   CERT_KEY: ${{ secrets.CERT_KEY }}
 
 jobs:
-  backend:
-    name: "Push backend image"
+  deployment:
+    name: "Terraform"
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
     env:
-      WORKING_DIRECTORY: packages/backend
-    concurrency:
-      group: ${{ github.workflow }}
+      INFRA_WORKING_DIRECTORY: packages/infrastructure/project
+      BACKEND_WORKING_DIRECTORY: packages/backend
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v3*
 
       - name: Log in to Scaleway Container Registry
         uses: docker/login-action@v2
@@ -46,7 +47,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
-          context: packages/backend
+          context: ${{ env.BACKEND_WORKING_DIRECTORY }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
@@ -57,50 +58,37 @@ jobs:
           TAGS=(${{ steps.meta.outputs.tags }})
           echo "::set-output name=second-tag::${TAGS[1]}"
 
-  terraform:
-    name: "Terraform"
-    runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
-    env:
-      WORKING_DIRECTORY: packages/infrastructure/project
-    concurrency:
-      group: ${{ github.workflow }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
 
       - name: Terraform Format
         id: fmt
         run: terraform fmt -check
-        working-directory: ${{ env.WORKING_DIRECTORY }}
+        working-directory: ${{ env.INFRA_WORKING_DIRECTORY }}
 
       - name: Terraform Init
         id: init
         run: terraform init
-        working-directory: ${{ env.WORKING_DIRECTORY }}
+        working-directory: ${{ env.INFRA_WORKING_DIRECTORY }}
 
       - name: Creating certificate
         run: |
           mkdir -p certs
           echo "${{ env.CERT_CRT }}" > certs/server.crt
           echo "${{ env.CERT_KEY }}" > certs/server.key
-        working-directory: ${{ env.WORKING_DIRECTORY }}
+        working-directory: ${{ env.INFRA_WORKING_DIRECTORY }}
 
       - name: Terraform Validate
         id: validate
         run: terraform validate -no-color
-        working-directory: ${{ env.WORKING_DIRECTORY }}
+        working-directory: ${{ env.INFRA_WORKING_DIRECTORY }}
 
       - name: Terraform Plan
         id: plan
         if: github.event_name == 'pull_request'
         run: terraform plan -no-color -input=false
         continue-on-error: true
-        working-directory: ${{ env.WORKING_DIRECTORY }}
+        working-directory: ${{ env.INFRA_WORKING_DIRECTORY }}
 
       - name: Update Pull Request
         uses: actions/github-script@v6
@@ -139,4 +127,4 @@ jobs:
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply -auto-approve -input=false
-        working-directory: ${{ env.WORKING_DIRECTORY }}
+        working-directory: ${{ env.INFRA_WORKING_DIRECTORY }}
