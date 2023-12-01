@@ -26,3 +26,9 @@ variable "backend_image" {
   default     = "rg.fr-par.scw.cloud/app-namespace/backend:latest"
   description = "Backend image tag to use."
 }
+
+variable "frontend_image" {
+  type        = string
+  default     = "rg.fr-par.scw.cloud/app-namespace/frontend:latest"
+  description = "Frontend image tag to use."
+}

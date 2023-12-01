@@ -24,6 +24,7 @@ jobs:
     env:
       INFRA_WORKING_DIRECTORY: packages/infrastructure/project
       BACKEND_WORKING_DIRECTORY: packages/backend
+      FRONTEND_WORKING_DIRECTORY: packages/frontend
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -35,8 +36,8 @@ jobs:
           username: ${{ secrets.SCW_ACCESS_KEY_ID }}
           password: ${{ secrets.SCW_ACCESS_KEY }}
 
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
+      - name: Backend - Extract metadata (tags, labels) for Docker
+        id: meta-backend
         uses: docker/metadata-action@v4
         with:
           images: rg.fr-par.scw.cloud/app-namespace/backend
@@ -44,18 +45,41 @@ jobs:
             latest
             type=sha
 
-      - name: Build and push
+      - name: Backend - Build and push
         uses: docker/build-push-action@v4
         with:
           context: ${{ env.BACKEND_WORKING_DIRECTORY }}
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.meta-backend.outputs.tags }}
+          labels: ${{ steps.meta-backend.outputs.labels }}
 
-      - name: Extract second tag (sha)
-        id: extract-tag
+      - name: Backend - Extract second tag (sha)
+        id: extract-tag-backend
         run: |
-          TAGS=(${{ steps.meta.outputs.tags }})
+          TAGS=(${{ steps.meta-backend.outputs.tags }})
+          echo "::set-output name=second-tag::${TAGS[1]}"
+
+      - name: Frontend - Extract metadata (tags, labels) for Docker
+        id: meta-frontend
+        uses: docker/metadata-action@v4
+        with:
+          images: rg.fr-par.scw.cloud/app-namespace/frontend
+          tags: |
+            latest
+            type=sha
+
+      - name: Frontend - Build and push
+        uses: docker/build-push-action@v4
+        with:
+          context: ${{ env.FRONTEND_WORKING_DIRECTORY }}
+          push: true
+          tags: ${{ steps.meta-frontend.outputs.tags }}
+          labels: ${{ steps.meta-frontend.outputs.labels }}
+
+      - name: Frontend - Extract second tag (sha)
+        id: extract-tag-frontend
+        run: |
+          TAGS=(${{ steps.meta-frontend.outputs.tags }})
           echo "::set-output name=second-tag::${TAGS[1]}"
 
       - name: Setup Terraform
@@ -87,7 +111,8 @@ jobs:
         id: plan
         if: github.event_name == 'pull_request'
         run: |
-          export TF_VAR_backend_image=${{ steps.extract-tag.outputs.second-tag }}
+          export TF_VAR_backend_image=${{ steps.extract-tag-backend.outputs.second-tag }}
+          export TF_VAR_frontend_image=${{ steps.extract-tag-frontend.outputs.second-tag }}
           terraform plan -no-color -input=false
         continue-on-error: true
         working-directory: ${{ env.INFRA_WORKING_DIRECTORY }}
@@ -129,6 +154,7 @@ jobs:
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: |
-          export TF_VAR_backend_image=${{ steps.extract-tag.outputs.second-tag }}
+          export TF_VAR_backend_image=${{ steps.extract-tag-backend.outputs.second-tag }}
+          export TF_VAR_frontend_image=${{ steps.extract-tag-frontend.outputs.second-tag }}
           terraform apply -auto-approve -input=false
         working-directory: ${{ env.INFRA_WORKING_DIRECTORY }}
