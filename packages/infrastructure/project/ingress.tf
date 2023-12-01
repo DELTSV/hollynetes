@@ -86,8 +86,6 @@ resource "kubernetes_ingress_v1" "app_ingress_static" {
     }
   }
 
-  wait_for_load_balancer = true
-
   spec {
     ingress_class_name = "nginx"
 
