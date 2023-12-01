@@ -40,16 +40,16 @@ jobs:
         run: terraform init
         working-directory: ${{ env.WORKING_DIRECTORY }}
 
-      - name: Terraform Validate
-        id: validate
-        run: terraform validate -no-color
-        working-directory: ${{ env.WORKING_DIRECTORY }}
-
       - name: Creating certificate
         run: |
           mkdir -p certs
           echo "${{ env.CERT_CRT }}" > certs/server.crt
           echo "${{ env.CERT_KEY }}" > certs/server.key
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
         working-directory: ${{ env.WORKING_DIRECTORY }}
 
       - name: Terraform Plan
