@@ -46,6 +46,7 @@ jobs:
             type=sha
 
       - name: Backend - Build and push
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         uses: docker/build-push-action@v4
         with:
           context: ${{ env.BACKEND_WORKING_DIRECTORY }}
@@ -69,6 +70,7 @@ jobs:
             type=sha
 
       - name: Frontend - Build and push
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         uses: docker/build-push-action@v4
         with:
           context: ${{ env.FRONTEND_WORKING_DIRECTORY }}
