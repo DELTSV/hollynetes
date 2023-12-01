@@ -17,6 +17,8 @@ resource "kubernetes_ingress_v1" "app_ingress" {
     }
   }
 
+  wait_for_load_balancer = true
+
   spec {
     ingress_class_name = "nginx"
 
@@ -85,6 +87,8 @@ resource "kubernetes_ingress_v1" "app_ingress_static" {
       "nginx.ingress.kubernetes.io/rewrite-target" = "/static/$2"
     }
   }
+
+  wait_for_load_balancer = true
 
   spec {
     ingress_class_name = "nginx"
