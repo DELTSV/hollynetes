@@ -29,7 +29,6 @@ jobs:
         uses: docker/login-action@v2
         with:
           registry: rg.fr-par.scw.cloud/app-namespace
-          username: ${{ secrets.SCW_ACCESS_KEY_ID }}
           password: ${{ secrets.SCW_ACCESS_KEY }}
 
       - name: Extract metadata (tags, labels) for Docker
