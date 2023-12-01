@@ -20,3 +20,9 @@ variable "domain_name" {
   default     = "hollynetes.fr"
   description = "Domain name to use for the cluster."
 }
+
+variable "backend_image" {
+  type        = string
+  default     = "rg.fr-par.scw.cloud/app-namespace/backend:latest"
+  description = "Backend image tag to use."
+}
