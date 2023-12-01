@@ -1,5 +1,5 @@
 data "scaleway_domain_zone" "hollynetes" {
-  domain = "hollynetes.fr"
+  domain = var.domain_name
 }
 
 resource "scaleway_domain_record" "hollynetes" {
