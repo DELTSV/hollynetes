@@ -184,7 +184,7 @@ jobs:
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: |
-          export TF_VAR_backend_image=${{ steps.extract-tag-backend.outputs.second-tag }}
-          export TF_VAR_frontend_image=${{ steps.extract-tag-frontend.outputs.second-tag }}
+          export TF_VAR_backend_image=${{ needs.backend.outputs.image-tag }}
+          export TF_VAR_frontend_image=${{ needs.frontend.outputs.image-tag }}
           terraform apply -auto-approve -input=false
         working-directory: ${{ env.WORKING_DIRECTORY }}
