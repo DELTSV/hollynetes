@@ -56,7 +56,7 @@ jobs:
         id: extract-tag
         run: |
           TAGS=(${{ steps.meta-backend.outputs.tags }})
-          echo "image-tag=${TAGS[1]}" >> $GITHUB_ENV
+          echo "image-tag=${TAGS[1]}" >> "$GITHUB_OUTPUT"
   deployment:
     name: "Deployment"
     runs-on: ubuntu-latest
