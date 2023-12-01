@@ -10,8 +10,8 @@ resource "kubernetes_ingress_v1" "app_ingress" {
     name = "app-ingress"
 
     annotations = {
-      "nginx.ingress.kubernetes.io/ssl-redirect"   = "true"
-      "nginx.ingress.kubernetes.io/ssl-passthrough": "false"
+      "nginx.ingress.kubernetes.io/ssl-redirect" = "true"
+      "nginx.ingress.kubernetes.io/ssl-passthrough" : "false"
       "nginx.ingress.kubernetes.io/use-regex"      = "true"
       "nginx.ingress.kubernetes.io/rewrite-target" = "/$2"
     }
@@ -21,7 +21,7 @@ resource "kubernetes_ingress_v1" "app_ingress" {
     ingress_class_name = "nginx"
 
     tls {
-      hosts = [var.domain_name]
+      hosts       = [var.domain_name]
       secret_name = kubernetes_secret.tls_cert.metadata[0].name
     }
 
@@ -80,8 +80,8 @@ resource "kubernetes_ingress_v1" "app_ingress_static" {
     name = "app-ingress-static"
 
     annotations = {
-      "nginx.ingress.kubernetes.io/ssl-redirect"   = "true"
-      "nginx.ingress.kubernetes.io/ssl-passthrough": "false"
+      "nginx.ingress.kubernetes.io/ssl-redirect" = "true"
+      "nginx.ingress.kubernetes.io/ssl-passthrough" : "false"
       "nginx.ingress.kubernetes.io/rewrite-target" = "/static/$2"
     }
   }
@@ -90,7 +90,7 @@ resource "kubernetes_ingress_v1" "app_ingress_static" {
     ingress_class_name = "nginx"
 
     tls {
-      hosts = [var.domain_name]
+      hosts       = [var.domain_name]
       secret_name = kubernetes_secret.tls_cert.metadata[0].name
     }
 
