@@ -17,8 +17,10 @@ env:
 
 jobs:
   backend:
-    name: "Node Backend"
+    name: "Push backend image"
     runs-on: ubuntu-latest
+    env:
+      WORKING_DIRECTORY: packages/backend
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -29,6 +31,29 @@ jobs:
           registry: rg.fr-par.scw.cloud/app-namespace
           username: ${{ secrets.SCW_ACCESS_KEY_ID }}
           password: ${{ secrets.SCW_ACCESS_KEY }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: app-namespace/backend
+          tags: |
+            latest
+            type=sha
+
+      - name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          context: packages/backend
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Extract second tag (sha)
+        id: extract-tag
+        run: |
+          TAGS=(${{ steps.meta.outputs.tags }})
+          echo "::set-output name=second-tag::${TAGS[1]}"
 
   terraform:
     name: "Terraform"
