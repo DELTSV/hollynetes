@@ -21,7 +21,7 @@ resource "kubernetes_deployment" "frontend" {
 
       spec {
         container {
-          image = "nginxdemos/hello:latest"
+          image = var.frontend_image
           name  = "frontend-container"
 
           port {

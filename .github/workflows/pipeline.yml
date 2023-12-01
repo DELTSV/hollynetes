@@ -16,9 +16,15 @@ env:
   CERT_KEY: ${{ secrets.CERT_KEY }}
 
 jobs:
-  backend:
-    name: "Node Backend"
+  deployment:
+    name: "Deployment"
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    env:
+      INFRA_WORKING_DIRECTORY: packages/infrastructure/project
+      BACKEND_WORKING_DIRECTORY: packages/backend
+      FRONTEND_WORKING_DIRECTORY: packages/frontend
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -26,20 +32,55 @@ jobs:
       - name: Log in to Scaleway Container Registry
         uses: docker/login-action@v2
         with:
-          registry: registry.scaleway.com
+          registry: rg.fr-par.scw.cloud/app-namespace
           username: ${{ secrets.SCW_ACCESS_KEY_ID }}
           password: ${{ secrets.SCW_ACCESS_KEY }}
 
-  terraform:
-    name: "Terraform"
-    runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
-    env:
-      WORKING_DIRECTORY: packages/infrastructure/project
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - name: Backend - Extract metadata (tags, labels) for Docker
+        id: meta-backend
+        uses: docker/metadata-action@v4
+        with:
+          images: rg.fr-par.scw.cloud/app-namespace/backend
+          tags: |
+            latest
+            type=sha
+
+      - name: Backend - Build and push
+        uses: docker/build-push-action@v4
+        with:
+          context: ${{ env.BACKEND_WORKING_DIRECTORY }}
+          push: true
+          tags: ${{ steps.meta-backend.outputs.tags }}
+          labels: ${{ steps.meta-backend.outputs.labels }}
+
+      - name: Backend - Extract second tag (sha)
+        id: extract-tag-backend
+        run: |
+          TAGS=(${{ steps.meta-backend.outputs.tags }})
+          echo "::set-output name=second-tag::${TAGS[1]}"
+
+      - name: Frontend - Extract metadata (tags, labels) for Docker
+        id: meta-frontend
+        uses: docker/metadata-action@v4
+        with:
+          images: rg.fr-par.scw.cloud/app-namespace/frontend
+          tags: |
+            latest
+            type=sha
+
+      - name: Frontend - Build and push
+        uses: docker/build-push-action@v4
+        with:
+          context: ${{ env.FRONTEND_WORKING_DIRECTORY }}
+          push: true
+          tags: ${{ steps.meta-frontend.outputs.tags }}
+          labels: ${{ steps.meta-frontend.outputs.labels }}
+
+      - name: Frontend - Extract second tag (sha)
+        id: extract-tag-frontend
+        run: |
+          TAGS=(${{ steps.meta-frontend.outputs.tags }})
+          echo "::set-output name=second-tag::${TAGS[1]}"
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
@@ -47,31 +88,34 @@ jobs:
       - name: Terraform Format
         id: fmt
         run: terraform fmt -check
-        working-directory: ${{ env.WORKING_DIRECTORY }}
+        working-directory: ${{ env.INFRA_WORKING_DIRECTORY }}
 
       - name: Terraform Init
         id: init
         run: terraform init
-        working-directory: ${{ env.WORKING_DIRECTORY }}
+        working-directory: ${{ env.INFRA_WORKING_DIRECTORY }}
 
       - name: Creating certificate
         run: |
           mkdir -p certs
           echo "${{ env.CERT_CRT }}" > certs/server.crt
           echo "${{ env.CERT_KEY }}" > certs/server.key
-        working-directory: ${{ env.WORKING_DIRECTORY }}
+        working-directory: ${{ env.INFRA_WORKING_DIRECTORY }}
 
       - name: Terraform Validate
         id: validate
         run: terraform validate -no-color
-        working-directory: ${{ env.WORKING_DIRECTORY }}
+        working-directory: ${{ env.INFRA_WORKING_DIRECTORY }}
 
       - name: Terraform Plan
         id: plan
         if: github.event_name == 'pull_request'
-        run: terraform plan -no-color -input=false
+        run: |
+          export TF_VAR_backend_image=${{ steps.extract-tag-backend.outputs.second-tag }}
+          export TF_VAR_frontend_image=${{ steps.extract-tag-frontend.outputs.second-tag }}
+          terraform plan -no-color -input=false
         continue-on-error: true
-        working-directory: ${{ env.WORKING_DIRECTORY }}
+        working-directory: ${{ env.INFRA_WORKING_DIRECTORY }}
 
       - name: Update Pull Request
         uses: actions/github-script@v6
@@ -109,5 +153,8 @@ jobs:
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: terraform apply -auto-approve -input=false
-        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: |
+          export TF_VAR_backend_image=${{ steps.extract-tag-backend.outputs.second-tag }}
+          export TF_VAR_frontend_image=${{ steps.extract-tag-frontend.outputs.second-tag }}
+          terraform apply -auto-approve -input=false
+        working-directory: ${{ env.INFRA_WORKING_DIRECTORY }}
