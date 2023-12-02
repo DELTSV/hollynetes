@@ -28,6 +28,12 @@ resource "kubernetes_deployment" "backend" {
             container_port = 3000
           }
 
+          env_from {
+            secret_ref {
+              name = kubernetes_secret.backend_env_secrets.metadata.0.name
+            }
+          }
+
           env {
             name  = "HF_APP_PORT"
             value = 3000
@@ -36,13 +42,6 @@ resource "kubernetes_deployment" "backend" {
           env {
             name  = "HF_APP_ENV"
             value = "prod"
-          }
-
-          env {
-            name  = "HF_TMDB_API_KEY"
-            value_from {
-              secret_key_ref = kubernetes_secret.backend_tmdb_api_key.metadata.0.name
-            }
           }
 
           env {

@@ -15,6 +15,9 @@ env:
   CERT_CRT: ${{ secrets.CERT_CRT }}
   CERT_KEY: ${{ secrets.CERT_KEY }}
   TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+  ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+  GOOGLE_AUTH_CLIENT_ID: ${{ secrets.GOOGLE_AUTH_CLIENT_ID }}
+  GOOGLE_AUTH_CLIENT_SECRET: ${{ secrets.GOOGLE_AUTH_CLIENT_SECRET }}
 
 jobs:
   frontend:
@@ -192,9 +195,12 @@ jobs:
         id: plan
         if: github.event_name == 'pull_request'
         run: |
-          export TF_VAR_backend_image=${{ needs.backend.outputs.image-tag }}
           export TF_VAR_frontend_image=${{ needs.frontend.outputs.image-tag }}
+          export TF_VAR_backend_image=${{ needs.backend.outputs.image-tag }}
           export TF_VAR_backend_tmdb_api_key=${{ env.TMDB_API_KEY }}
+          export TF_VAR_backend_admin_password=${{ env.ADMIN_PASSWORD }}
+          export TF_VAR_backend_google_auth_client_id=${{ env.GOOGLE_AUTH_CLIENT_ID }}
+          export TF_VAR_backend_google_auth_client_secret=${{ env.GOOGLE_AUTH_CLIENT_SECRET }}
           terraform plan -no-color -input=false
         continue-on-error: true
         working-directory: ${{ env.WORKING_DIRECTORY }}
@@ -236,8 +242,11 @@ jobs:
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: |
-          export TF_VAR_backend_image=${{ needs.backend.outputs.image-tag }}
           export TF_VAR_frontend_image=${{ needs.frontend.outputs.image-tag }}
+          export TF_VAR_backend_image=${{ needs.backend.outputs.image-tag }}
           export TF_VAR_backend_tmdb_api_key=${{ env.TMDB_API_KEY }}
+          export TF_VAR_backend_admin_password=${{ env.ADMIN_PASSWORD }}
+          export TF_VAR_backend_google_auth_client_id=${{ env.GOOGLE_AUTH_CLIENT_ID }}
+          export TF_VAR_backend_google_auth_client_secret=${{ env.GOOGLE_AUTH_CLIENT_SECRET }}
           terraform apply -auto-approve -input=false
         working-directory: ${{ env.WORKING_DIRECTORY }}
