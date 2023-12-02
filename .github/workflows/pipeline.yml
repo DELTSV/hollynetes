@@ -93,6 +93,31 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Cache node modules
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        id: cache-npm
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      - if: steps.cache-npm.outputs.cache-hit != 'true' && github.ref == 'refs/heads/main' && github.event_name == 'push'
+        name: List the state of node modules
+        continue-on-error: true
+        run: npm list
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+
+      - name: Install dependencies
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: npm install
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+
       - name: Log in to Scaleway Container Registry
         uses: docker/login-action@v2
         with:
