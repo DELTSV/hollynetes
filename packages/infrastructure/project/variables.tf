@@ -52,3 +52,13 @@ variable "backend_google_auth_client_secret" {
   type      = string
   sensitive = true
 }
+
+variable "mongo_initdb_root_username" {
+  type      = string
+  sensitive = true
+}
+
+variable "mongo_initdb_root_password" {
+  type      = string
+  sensitive = true
+}

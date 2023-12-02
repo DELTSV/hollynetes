@@ -17,6 +17,13 @@ resource "scaleway_object_bucket" "tfstate_bucket" {
   }
 }
 
+resource "scaleway_registry_namespace" "app_namespace" {
+  name        = "app-namespace"
+  description = "App registry namespace"
+  is_public   = false
+}
+
+
 provider "scaleway" {
   access_key = var.access_key_id
   secret_key = var.secret_key

@@ -5,12 +5,14 @@ resource "kubernetes_service" "mongodb" {
 
   spec {
     selector = {
-      app = kubernetes_deployment.mongodb.spec[0].template[0].metadata[0].labels.app
+      app = "mongodb"
     }
 
     port {
       port        = 27017
       target_port = 27017
     }
+
+    cluster_ip = "None"
   }
 }

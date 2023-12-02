@@ -25,3 +25,16 @@ resource "kubernetes_secret" "backend_env_secrets" {
 
   type = "Opaque"
 }
+
+resource "kubernetes_secret" "mongodb_env_secrets" {
+  metadata {
+    name = "mongodb-env-secrets"
+  }
+
+  data = {
+    "MONGO_INITDB_ROOT_USERNAME" = var.mongo_initdb_root_username
+    "MONGO_INITDB_ROOT_PASSWORD" = var.mongo_initdb_root_password
+  }
+
+  type = "Opaque"
+}
