@@ -6,6 +6,8 @@ COPY ./ /usr/local/app/
 
 RUN npm run build
 
+npm prune --omit=dev
+
 FROM node:18
 
 WORKDIR /usr/local/app

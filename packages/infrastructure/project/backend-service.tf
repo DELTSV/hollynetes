@@ -9,8 +9,8 @@ resource "kubernetes_service" "backend" {
     }
 
     port {
-      port        = 80
-      target_port = 80
+      port        = 3000
+      target_port = 3000
     }
   }
 }

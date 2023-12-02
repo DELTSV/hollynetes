@@ -25,7 +25,7 @@ resource "kubernetes_deployment" "backend" {
           name  = "backend-container"
 
           port {
-            container_port = 8080
+            container_port = 3000
           }
 
           env {
