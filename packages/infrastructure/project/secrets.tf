@@ -10,3 +10,13 @@ resource "kubernetes_secret" "tls_cert" {
 
   type = "kubernetes.io/tls"
 }
+
+resource "kubernetes_secret" "backend_tmdb_api_key" {
+  metadata {
+    name = "backend-tmdb-api-key"
+  }
+
+  data = var.backend_tmdb_api_key
+
+  type = "Opaque"
+}

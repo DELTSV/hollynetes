@@ -6,7 +6,7 @@ COPY ./ /usr/local/app/
 
 RUN npm run build
 
-npm prune --omit=dev
+RUN npm prune --omit=dev
 
 FROM node:18
 

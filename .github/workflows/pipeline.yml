@@ -14,6 +14,7 @@ env:
   AWS_SECRET_ACCESS_KEY: ${{ secrets.SCW_ACCESS_KEY }}
   CERT_CRT: ${{ secrets.CERT_CRT }}
   CERT_KEY: ${{ secrets.CERT_KEY }}
+  TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
 
 jobs:
   frontend:
@@ -148,7 +149,7 @@ jobs:
         run: |
           TAGS=(${{ steps.meta.outputs.tags }})
           echo "image-tag=${TAGS[1]}" >> "$GITHUB_OUTPUT"
-  deployment:
+  terraform:
     name: "Terraform"
     runs-on: ubuntu-latest
     needs:
@@ -193,6 +194,7 @@ jobs:
         run: |
           export TF_VAR_backend_image=${{ needs.backend.outputs.image-tag }}
           export TF_VAR_frontend_image=${{ needs.frontend.outputs.image-tag }}
+          export TF_VAR_backend_tmdb_api_key=${{ env.TMDB_API_KEY }}
           terraform plan -no-color -input=false
         continue-on-error: true
         working-directory: ${{ env.WORKING_DIRECTORY }}
@@ -236,5 +238,6 @@ jobs:
         run: |
           export TF_VAR_backend_image=${{ needs.backend.outputs.image-tag }}
           export TF_VAR_frontend_image=${{ needs.frontend.outputs.image-tag }}
+          export TF_VAR_backend_tmdb_api_key=${{ env.TMDB_API_KEY }}
           terraform apply -auto-approve -input=false
         working-directory: ${{ env.WORKING_DIRECTORY }}
