@@ -44,6 +44,10 @@ resource "kubernetes_deployment" "frontend" {
       }
     }
   }
+
+  depends_on = [
+    kubernetes_config_map.nginx_frontend_website_config
+  ]
 }
 
 resource "kubernetes_config_map" "nginx_frontend_website_config" {
