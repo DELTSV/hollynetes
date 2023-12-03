@@ -1,7 +1,7 @@
 export const environment = {
-  apiUrl: 'https://www.hollyfilms.fr/api',
+  apiUrl: 'https://hollynetes.fr/api',
   name: 'prod',
-  websocketUrl: 'https://www.hollyfilms.fr',
+  websocketUrl: 'https://hollynetes.fr',
   websocketNamespace: '/api/processing-socket',
   serviceWorker: true,
   production: true,
