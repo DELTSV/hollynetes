@@ -10,15 +10,16 @@ env:
   TF_VAR_access_key_id: ${{ secrets.SCW_ACCESS_KEY_ID }}
   TF_VAR_secret_key: ${{ secrets.SCW_ACCESS_KEY }}
   TF_VAR_project_id: ${{ secrets.SCW_PROJECT_ID }}
+  TF_VAR_backend_tmdb_api_key: ${{ secrets.TMDB_API_KEY }}
+  TF_VAR_backend_admin_password: ${{ secrets.ADMIN_PASSWORD }}
+  TF_VAR_backend_google_auth_client_id: ${{ secrets.GOOGLE_AUTH_CLIENT_ID }}
+  TF_VAR_backend_google_auth_client_secret: ${{ secrets.GOOGLE_AUTH_CLIENT_SECRET }}
+  TF_VAR_backend_jwt_secret: ${{ secrets.JWT_SECRET }}
+  TF_VAR_mongo_root_password: ${{ secrets.MONGO_ROOT_PASSWORD }}
   AWS_ACCESS_KEY_ID: ${{ secrets.SCW_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.SCW_ACCESS_KEY }}
   CERT_CRT: ${{ secrets.CERT_CRT }}
   CERT_KEY: ${{ secrets.CERT_KEY }}
-  TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
-  ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
-  GOOGLE_AUTH_CLIENT_ID: ${{ secrets.GOOGLE_AUTH_CLIENT_ID }}
-  GOOGLE_AUTH_CLIENT_SECRET: ${{ secrets.GOOGLE_AUTH_CLIENT_SECRET }}
-  MONGO_ROOT_PASSWORD: ${{ secrets.MONGO_ROOT_PASSWORD }}
 
 jobs:
   frontend:
@@ -192,17 +193,15 @@ jobs:
         run: terraform validate -no-color
         working-directory: ${{ env.WORKING_DIRECTORY }}
 
+      - name: Write image tags in environment
+        run: |
+          echo "TF_VAR_frontend_image=${{ needs.frontend.outputs.image-tag }}" >> $GITHUB_ENV
+          echo "TF_VAR_backend_image=${{ needs.backend.outputs.image-tag }}" >> $GITHUB_ENV
+
       - name: Terraform Plan
         id: plan
         if: github.event_name == 'pull_request'
         run: |
-          export TF_VAR_frontend_image=${{ needs.frontend.outputs.image-tag }}
-          export TF_VAR_backend_image=${{ needs.backend.outputs.image-tag }}
-          export TF_VAR_backend_tmdb_api_key=${{ env.TMDB_API_KEY }}
-          export TF_VAR_backend_admin_password=${{ env.ADMIN_PASSWORD }}
-          export TF_VAR_backend_google_auth_client_id=${{ env.GOOGLE_AUTH_CLIENT_ID }}
-          export TF_VAR_backend_google_auth_client_secret=${{ env.GOOGLE_AUTH_CLIENT_SECRET }}
-          export TF_VAR_mongo_root_password=${{ env.MONGO_ROOT_PASSWORD }}
           terraform plan -no-color -input=false
         continue-on-error: true
         working-directory: ${{ env.WORKING_DIRECTORY }}
@@ -244,12 +243,5 @@ jobs:
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: |
-          export TF_VAR_frontend_image=${{ needs.frontend.outputs.image-tag }}
-          export TF_VAR_backend_image=${{ needs.backend.outputs.image-tag }}
-          export TF_VAR_backend_tmdb_api_key=${{ env.TMDB_API_KEY }}
-          export TF_VAR_backend_admin_password=${{ env.ADMIN_PASSWORD }}
-          export TF_VAR_backend_google_auth_client_id=${{ env.GOOGLE_AUTH_CLIENT_ID }}
-          export TF_VAR_backend_google_auth_client_secret=${{ env.GOOGLE_AUTH_CLIENT_SECRET }}
-          export TF_VAR_mongo_root_password=${{ env.MONGO_ROOT_PASSWORD }}
           terraform apply -auto-approve -input=false
         working-directory: ${{ env.WORKING_DIRECTORY }}

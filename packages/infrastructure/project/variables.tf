@@ -57,3 +57,8 @@ variable "mongo_root_password" {
   type      = string
   sensitive = true
 }
+
+variable "backend_jwt_secret" {
+  type      = string
+  sensitive = true
+}

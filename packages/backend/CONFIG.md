@@ -24,13 +24,13 @@
 | HF_JWT_EXPIRE_IN | 1-day | JWT expiration time | isValidPeriod, isString | No |
 | HF_RTOKEN_LENGTH | 32 | RToken expiration time | isNumber | No |
 | HF_RTOKEN_EXPIRE_IN | 1-day | RToken expiration time | isValidPeriod, isString | No |
-| HF_COOKIE_NAME | hollyfilms | Cookie name | isString | No |
+| HF_COOKIE_NAME | hollynetes | Cookie name | isString | No |
 | HF_COOKIE_EXPIRES_IN | 1-year | Cookie expiration time | isValidPeriod, isString | No |
 | HF_COOKIE_SECURE | false | Cookie secure | isBoolean | No |
 | HF_MAILS_HOST | localhost | Mail host | isString | No |
-| HF_MAILS_USER | noreply@hollyfilms.fr | Mail user | isEmail, isString | No |
+| HF_MAILS_USER | noreply@hollynetes.fr | Mail user | isEmail, isString | No |
 | HF_MAILS_PASSWORD | default | Mail password | isString | Yes |
-| HF_MAILS_USER_TAG | HollyFilms | Mail user tag | isString | No |
+| HF_MAILS_USER_TAG | HollyNetes | Mail user tag | isString | No |
 | HF_ADMIN_EMAIL | admin@hollynetes.fr | Admin email | isEmail, isString | No |
 | HF_ADMIN_PASSWORD | admin | Admin password | isString | Yes |
 | HF_TMDB_API_KEY |  | TMBD api key | isString | Yes |
@@ -45,4 +45,4 @@
 | HF_GOOGLE_AUTH_CLIENT_ID |  | OAuth client id | isString | No |
 | HF_GOOGLE_AUTH_CLIENT_SECRET |  | OAuth client secret | isString | Yes |
 
-Generated on 03/12/2023 17:17:33
+Generated on 03/12/2023 18:43:04

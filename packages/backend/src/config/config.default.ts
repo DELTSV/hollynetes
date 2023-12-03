@@ -38,15 +38,15 @@ export const defaultConfig: ConfigEnvironmentDto = {
   HF_RTOKEN_EXPIRE_IN: "1-day",
 
   // Cookie
-  HF_COOKIE_NAME: "hollyfilms",
+  HF_COOKIE_NAME: "hollynetes",
   HF_COOKIE_EXPIRES_IN: "1-year",
   HF_COOKIE_SECURE: false,
 
   // Mail
   HF_MAILS_HOST: "localhost",
-  HF_MAILS_USER: "noreply@hollyfilms.fr",
+  HF_MAILS_USER: "noreply@hollynetes.fr",
   HF_MAILS_PASSWORD: "default",
-  HF_MAILS_USER_TAG: "HollyFilms",
+  HF_MAILS_USER_TAG: "HollyNetes",
 
   // Admin
   HF_ADMIN_EMAIL: "admin@hollynetes.fr",

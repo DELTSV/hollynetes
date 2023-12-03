@@ -70,23 +70,8 @@ resource "kubernetes_deployment" "backend" {
           }
 
           env {
-            name  = "HF_MAILS_USER"
-            value = "noreply@hollynetes.fr"
-          }
-
-          env {
             name  = "HF_MAILS_HOST"
             value = "mail.hollynetes.fr"
-          }
-
-          env {
-            name  = "HF_APP_VERBOSE"
-            value = 0
-          }
-
-          env {
-            name  = "HF_SSL_ENABLED"
-            value = 0
           }
         }
       }

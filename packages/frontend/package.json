@@ -5,7 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "start:pwa": "rimraf dist && ng build --configuration development-pwa && http-server -p 8080 dist/frontend",
-    "build": "ng build",
+    "build": "ng build --define=variableName=variableValue",
     "lint": "prettier --check \"./src/**/*{.html, .scss}\" && eslint \"{src,test}/**/*.ts\"",
     "lint:fix": "prettier -w \"./src/**/*{.html, .scss}\" && eslint \"{src,test}/**/*.ts\" --fix",
     "watch": "ng build --watch --configuration development",
