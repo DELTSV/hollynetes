@@ -95,9 +95,9 @@ export class MediasService {
       case FeaturedType.INLIST:
         return ['Ceci est dans votre liste', faList];
       case FeaturedType.POPULAR:
-        return ['Très populaire sur HollyFilms', faArrowTrendUp];
+        return ['Très populaire sur HollyNetes', faArrowTrendUp];
       case FeaturedType.RECENT:
-        return ['Nouveau sur HollyFilms', faBolt];
+        return ['Nouveau sur HollyNetes', faBolt];
       case FeaturedType.RECOMMENDED:
         return ['Recommandé pour vous', faUserCheck];
       default:

@@ -1,17 +1,3 @@
-resource "kubernetes_persistent_volume_claim" "mongodb" {
-  metadata {
-    name = "mongodb"
-  }
-  spec {
-    access_modes = ["ReadWriteOnce"]
-    resources {
-      requests = {
-        storage = "1Gi"
-      }
-    }
-  }
-}
-
 resource "kubernetes_stateful_set" "mongodb" {
   metadata {
     name = "mongodb"
@@ -35,7 +21,7 @@ resource "kubernetes_stateful_set" "mongodb" {
 
       spec {
         container {
-          image = "mongo:3.6.5"
+          image = "mongo:7.0.4"
           name  = "mongodb"
 
           port {
@@ -55,8 +41,13 @@ resource "kubernetes_stateful_set" "mongodb" {
           }
 
           env {
-            name = "MONGO_INITDB_DATABASE"
+            name  = "MONGO_INITDB_DATABASE"
             value = "hollynetes"
+          }
+
+          env {
+            name  = "MONGO_INITDB_ROOT_USERNAME"
+            value = "root"
           }
         }
 

@@ -51,13 +51,13 @@ export class HomeComponent implements OnInit {
         },
         {
           type: ListType.POPULAR,
-          name: 'Contenu populaire sur HollyFilms',
+          name: 'Contenu populaire sur HollyNetes',
           medias: [],
         },
         { type: ListType.CONTINUE, name: 'Continuer la lecture', medias: [] },
         {
           type: ListType.RECENT,
-          name: 'Récemment ajouté sur HollyFilms',
+          name: 'Récemment ajouté sur HollyNetes',
           medias: [],
         },
         {

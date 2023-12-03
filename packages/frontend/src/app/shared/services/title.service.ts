@@ -14,7 +14,7 @@ import { filter, map, mergeMap, tap } from 'rxjs';
 })
 export class TitleService {
   private readonly separator = ' - ';
-  private readonly endTag = 'HollyFilms';
+  private readonly endTag = 'HollyNetes';
 
   private lastRouteTitle = '';
 
