@@ -53,6 +53,11 @@ resource "kubernetes_stateful_set" "mongodb" {
               name = kubernetes_secret.mongodb_env_secrets.metadata[0].name
             }
           }
+
+          env {
+            name = "MONGO_INITDB_DATABASE"
+            value = "hollynetes"
+          }
         }
 
         volume {
