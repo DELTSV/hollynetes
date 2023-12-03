@@ -17,8 +17,6 @@ import { IdentityModule } from "./indentity/identity.module";
 import colorize = require("json-colorizer");
 import { MediasModule } from "./medias/medias.module";
 import { TmdbModule } from "./tmdb/tmdb.module";
-import { ProcessingModule } from "./processing/processing.module";
-import { MailsModule } from "./mails/mails.module";
 import { MongooseModuleOptions } from "@nestjs/mongoose/dist/interfaces/mongoose-options.interface";
 
 @Module({})
@@ -61,9 +59,7 @@ export class AppModule {
         }),
         IdentityModule,
         MediasModule,
-        MailsModule,
         TmdbModule,
-        ProcessingModule,
       ],
       providers: [Logger],
       controllers: [AppController],

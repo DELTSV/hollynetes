@@ -2,14 +2,7 @@ import * as fs from "fs";
 import * as path from "path";
 import * as zlib from "zlib";
 
-import {
-  forwardRef,
-  HttpException,
-  HttpStatus,
-  Inject,
-  Injectable,
-  Logger,
-} from "@nestjs/common";
+import { forwardRef, HttpException, HttpStatus, Inject, Injectable, Logger, } from "@nestjs/common";
 import { Response } from "express";
 import { Media, MediaDocument } from "./media.schema";
 import CurrentUser from "../indentity/users/current";
@@ -29,9 +22,6 @@ import {
 import { Episode } from "./tvs/schemas/episode.schema";
 import { FileInfos } from "./schemas/file-infos.schema";
 import { UsersService } from "../indentity/users/users.service";
-import { ProcessingService } from "../processing/processing.service";
-import { QueuedProcess } from "../processing/queued-process.schema";
-import * as rimraf from "rimraf";
 import { ConfigService } from "@nestjs/config";
 import { MediasConfig } from "../config/config";
 import { getMoviesToMigrate, getTvsToMigrate } from "../bootstrap/migrations";
@@ -84,8 +74,6 @@ export class MediasService {
     @InjectModel(Media.name) private mediaModel: Model<MediaDocument>,
     @Inject(forwardRef(() => UsersService))
     private readonly userService: UsersService,
-    @Inject(forwardRef(() => ProcessingService))
-    private readonly processingService: ProcessingService,
     private readonly configService: ConfigService,
     private readonly tmdbService: TmdbService
   ) {}
@@ -120,12 +108,6 @@ export class MediasService {
     return this.userService
       .deletePlayedMediasOccurences(id)
       .then(() => this.mediaModel.findByIdAndDelete(id))
-      .then((media) => this.removeMediaFromDisk(id).then(() => media));
-  }
-
-  async removeMediaFromDisk(mediaId): Promise<void> {
-    const path = this.processingService.getTargetPath(mediaId);
-    if (fs.existsSync(path)) rimraf.sync(path);
   }
 
   getMostRedondantGenreFromMedias(mediaIds: string[]) {
@@ -187,53 +169,7 @@ export class MediasService {
   }
 
   async getAdminMedias(): Promise<MediaWithTypeAndQueue[]> {
-    let medias = await this.getMedias();
-
-    const queue = await this.processingService.getQueue().then((queue) =>
-      queue.reduce((acc, cur) => {
-        acc[cur.media._id.toString()] = [
-          ...(acc[cur.media._id.toString()] || []),
-          cur,
-        ];
-        return acc;
-      }, {} as Record<string, QueuedProcess[]>)
-    );
-
-    for (const mediaId of Object.keys(queue)) {
-      const index = medias.findIndex(
-        (media) => media.data._id.toString() === mediaId
-      );
-      if (index !== -1) {
-        medias = [...medias.slice(0, index), ...medias.slice(index + 1)];
-      }
-    }
-
-    const queuedMedias: Array<MediaWithType | MediaWithTypeAndQueue> =
-      await Promise.all(
-        Object.entries(queue).map(([mediaId, video]) =>
-          this.mediaModel
-            .findById(mediaId)
-            .exec()
-            .then(formatOneMedia)
-            .then((media) => ({
-              ...media,
-              queue: video.map((v) => ({
-                _id: v._id,
-                filePath: v.filePath,
-                seasonIndex: v.seasonIndex,
-                episodeIndex: v.episodeIndex,
-                dateAdded: v.createdAt,
-              })),
-            }))
-        )
-      ).then((medias) =>
-        medias.sort(
-          (a, b) =>
-            a.queue[0].dateAdded.getTime() - b.queue[0].dateAdded.getTime()
-        )
-      );
-
-    return [...queuedMedias, ...medias];
+    return await this.getMedias();
   }
 
   extractFromIds(ids: string[], medias: MediaWithType[]) {

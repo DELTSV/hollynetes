@@ -9,13 +9,9 @@ import { UsersService } from "../../indentity/users/users.service";
 import { InjectModel } from "@nestjs/mongoose";
 import { Media, MediaDocument } from "../media.schema";
 import { Model } from "mongoose";
-import { HttpService } from "@nestjs/axios";
-import { ConfigService } from "@nestjs/config";
 import { TmdbService } from "../../tmdb/tmdb.service";
 import { MediaWithType } from "../medias.utils";
-import { ProcessingService } from "../../processing/processing.service";
 import * as fs from "fs";
-import { FileInfos } from "../schemas/file-infos.schema";
 
 @Injectable()
 export class TvsService {
@@ -24,12 +20,7 @@ export class TvsService {
   constructor(
     @InjectModel(Media.name) private mediaModel: Model<MediaDocument>,
     @Inject(forwardRef(() => UsersService))
-    private readonly userService: UsersService,
-    private readonly http: HttpService,
     private readonly tmdbService: TmdbService,
-    private readonly configService: ConfigService,
-    @Inject(forwardRef(() => ProcessingService))
-    private readonly processingService: ProcessingService
   ) {}
 
   async findAll(): Promise<Media[]> {
@@ -85,9 +76,8 @@ export class TvsService {
       throw new HttpException("File not found", 404);
     }
 
-    return this.processingService.addToQueue(
+    this.finalizeProcess(
       mediaId,
-      filePath,
       seasonIndex,
       episodeIndex
     );
@@ -95,7 +85,6 @@ export class TvsService {
 
   finalizeProcess(
     mediaId: string,
-    fileInfos: FileInfos,
     seasonIndex: number,
     episodeIndex: number
   ) {
@@ -107,8 +96,6 @@ export class TvsService {
         $set: {
           available: true,
           [`tvs.${seasonIndex - 1}.available`]: true,
-          [`tvs.${seasonIndex - 1}.episodes.${episodeIndex - 1}.fileInfos`]:
-            fileInfos,
           [`tvs.${seasonIndex - 1}.episodes.${episodeIndex - 1}.available`]:
             true,
         },

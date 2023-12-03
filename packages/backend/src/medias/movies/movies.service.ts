@@ -14,7 +14,6 @@ import {
   MediaWithType,
   MediaWithTypeAndQueue,
 } from "../medias.utils";
-import { ProcessingService } from "../../processing/processing.service";
 import { FileInfos } from "../schemas/file-infos.schema";
 import * as fs from "fs";
 
@@ -25,8 +24,6 @@ export class MoviesService {
   constructor(
     @InjectModel(Media.name) private mediaModel: Model<MediaDocument>,
     private readonly tmdbService: TmdbService,
-    @Inject(forwardRef(() => ProcessingService))
-    private readonly processingService: ProcessingService
   ) {}
 
   async findAll(): Promise<Media[]> {
@@ -53,19 +50,16 @@ export class MoviesService {
       this.logger.log(`Added movie ${movie.data.title}`);
       const createdMovie = await this.create(movie.data);
 
-      return this.processingService
-        .addToQueue(createdMovie.data._id, filePath)
-        .then(() => ({ ...createdMovie, queue: { fileName: filePath } }));
+      return this.finalizeProcess(createdMovie.data._id).then(() => ({ ...createdMovie, queue: { fileName: filePath } }));
     });
   }
 
-  finalizeProcess(mediaId: string, fileInfos: FileInfos) {
+  finalizeProcess(mediaId: string) {
     this.logger.verbose(`Finalizing process for movie ${mediaId}`);
     return this.mediaModel
       .findByIdAndUpdate(mediaId, {
         $set: {
           available: true,
-          fileInfos,
         },
       })
       .exec();

@@ -55,6 +55,21 @@ resource "kubernetes_deployment" "backend" {
           }
 
           env {
+            name  = "HF_DB_HOST"
+            value = "mongodb.default.svc.cluster.local"
+          }
+
+          env {
+            name  = "HF_DB_PORT"
+            value = 27017
+          }
+
+          env {
+            name  = "HF_DB_USER"
+            value = "root"
+          }
+
+          env {
             name  = "HF_MAILS_USER"
             value = "noreply@hollynetes.fr"
           }

@@ -12,7 +12,7 @@ import * as path from "path";
 
 import { triggerConfigDocGen } from "nestjs-env-config";
 
-import { APIConfig, CookieConfig, MediasConfig } from "../config/config";
+import { APIConfig, CookieConfig } from "../config/config";
 import { AppModule } from "../app.module";
 import { getWinstonLogger } from "../logger/winston";
 import { defaultConfig, Environment } from "../config/config.default";
@@ -23,8 +23,6 @@ import { generateAPIDocs } from "./api.doc";
 import { ConfigEnvironmentDto } from "../config/config.environment.dto";
 import { UsersService } from "../indentity/users/users.service";
 import { warpSSLConfig } from "./ssl";
-import { prepareProcessing } from "./prepare-processing";
-import { ProcessingService } from "../processing/processing.service";
 
 dotenv.config({ path: ".env" });
 
@@ -47,8 +45,6 @@ export default async () => {
 
   const configService = app.get<ConfigService<APIConfig>>(ConfigService);
   const env = configService.get<Environment>("currentEnv");
-
-  prepareProcessing(configService.get<MediasConfig>("medias"));
 
   if (env === Environment.PROD) {
     app.setGlobalPrefix("api");
@@ -129,7 +125,6 @@ export default async () => {
   );
 
   await app.get(UsersService).createAdminAccount();
-  await app.get(ProcessingService).purgeProcessing();
 
   await app.listen(configService.get<number>("port")).then(() => {
     Logger.log(

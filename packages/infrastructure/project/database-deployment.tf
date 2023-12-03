@@ -1,67 +1,24 @@
-resource "kubernetes_service_account" "mongodb" {
+resource "kubernetes_persistent_volume_claim" "mongodb" {
   metadata {
-    name = "mongodb-account"
+    name = "mongodb"
   }
-}
-
-resource "kubernetes_cluster_role" "mongodb" {
-
-
-  metadata {
-    name = "mongodb-role"
-  }
-
-  rule {
-    api_groups = [""]
-    resources  = ["configmaps"]
-    verbs      = ["*"]
-  }
-
-  rule {
-    api_groups = [""]
-    resources  = ["deployments"]
-    verbs      = ["list", "watch"]
-  }
-
-  rule {
-    api_groups = [""]
-    resources  = ["services"]
-    verbs      = ["*"]
-  }
-
-  rule {
-    api_groups = [""]
-    resources  = ["pods"]
-    verbs      = ["get", "list", "watch"]
-  }
-}
-
-resource "kubernetes_cluster_role_binding" "mongodb" {
-  metadata {
-    name = "mongodb-role-binding"
-  }
-
-  subject {
-    kind = "ServiceAccount"
-    name = kubernetes_service_account.mongodb.metadata.0.name
-  }
-
-  role_ref {
-    api_group = "rbac.authorization.k8s.io"
-    kind      = "ClusterRole"
-    name      = kubernetes_cluster_role.mongodb.metadata.0.name
+  spec {
+    access_modes = ["ReadWriteOnce"]
+    resources {
+      requests = {
+        storage = "1Gi"
+      }
+    }
   }
 }
 
 resource "kubernetes_stateful_set" "mongodb" {
   metadata {
-    name = "mongodb-replica"
+    name = "mongodb"
   }
 
   spec {
-    service_name = kubernetes_service.mongodb.metadata.0.name
-
-    replicas = 3
+    service_name = "mongodb"
 
     selector {
       match_labels = {
@@ -72,57 +29,37 @@ resource "kubernetes_stateful_set" "mongodb" {
     template {
       metadata {
         labels = {
-          app      = "mongodb"
-          selector = "mongodb"
+          app = "mongodb"
         }
       }
 
       spec {
-        service_account_name             = kubernetes_service_account.mongodb.metadata.0.name
-        termination_grace_period_seconds = 30
-
         container {
-          image = "mongo:7.0.4"
+          image = "mongo:3.6.5"
           name  = "mongodb"
 
-          command = ["/bin/sh"]
-          args    = ["-c", "mongod --replSet=rs0 --bind_ip_all"]
-
-          resources {
-            limits = {
-              cpu    = "0.5"
-              memory = "512Mi"
-            }
-
-            requests = {
-              cpu    = "0.5"
-              memory = "512Mi"
-            }
-          }
-
           port {
-            name           = "mongodb-port"
             container_port = 27017
+            name           = "mongodb"
           }
 
           volume_mount {
             mount_path = "/data/db"
-            name       = "mongodb-data"
+            name       = "mongodb"
+          }
+
+          env_from {
+            secret_ref {
+              name = kubernetes_secret.mongodb_env_secrets.metadata[0].name
+            }
           }
         }
-      }
-    }
 
-    volume_claim_template {
-      metadata {
-        name = "mongodb-data"
-      }
+        volume {
+          name = "mongodb"
 
-      spec {
-        access_modes = ["ReadWriteOnce"]
-        resources {
-          requests = {
-            storage = "1Gi"
+          persistent_volume_claim {
+            claim_name = kubernetes_persistent_volume_claim.mongodb.metadata[0].name
           }
         }
       }

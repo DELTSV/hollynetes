@@ -18,6 +18,7 @@ env:
   ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
   GOOGLE_AUTH_CLIENT_ID: ${{ secrets.GOOGLE_AUTH_CLIENT_ID }}
   GOOGLE_AUTH_CLIENT_SECRET: ${{ secrets.GOOGLE_AUTH_CLIENT_SECRET }}
+  MONGO_ROOT_PASSWORD: ${{ secrets.MONGO_ROOT_PASSWORD }}
 
 jobs:
   frontend:
@@ -201,6 +202,7 @@ jobs:
           export TF_VAR_backend_admin_password=${{ env.ADMIN_PASSWORD }}
           export TF_VAR_backend_google_auth_client_id=${{ env.GOOGLE_AUTH_CLIENT_ID }}
           export TF_VAR_backend_google_auth_client_secret=${{ env.GOOGLE_AUTH_CLIENT_SECRET }}
+          export TF_VAR_mongo_root_password=${{ env.MONGO_ROOT_PASSWORD }}
           terraform plan -no-color -input=false
         continue-on-error: true
         working-directory: ${{ env.WORKING_DIRECTORY }}
@@ -248,5 +250,6 @@ jobs:
           export TF_VAR_backend_admin_password=${{ env.ADMIN_PASSWORD }}
           export TF_VAR_backend_google_auth_client_id=${{ env.GOOGLE_AUTH_CLIENT_ID }}
           export TF_VAR_backend_google_auth_client_secret=${{ env.GOOGLE_AUTH_CLIENT_SECRET }}
+          export TF_VAR_mongo_root_password=${{ env.MONGO_ROOT_PASSWORD }}
           terraform apply -auto-approve -input=false
         working-directory: ${{ env.WORKING_DIRECTORY }}

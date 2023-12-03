@@ -1,6 +1,6 @@
-resource "kubernetes_service" "mongodb" {
+resource "kubernetes_service" "mongodb-headless" {
   metadata {
-    name = "mongodb-service"
+    name = "mongodb"
   }
 
   spec {
@@ -9,8 +9,8 @@ resource "kubernetes_service" "mongodb" {
     }
 
     port {
-      port        = 27017
-      target_port = 27017
+      name = "mongodb"
+      port = 27017
     }
 
     cluster_ip = "None"

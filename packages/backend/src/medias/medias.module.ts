@@ -3,7 +3,6 @@ import { MediasService } from "./medias.service";
 import { forwardRef, Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
 import { Media, MediaSchema } from "./media.schema";
-import { ProcessingModule } from "../processing/processing.module";
 import { IdentityModule } from "../indentity/identity.module";
 import { TvsService } from "./tvs/tvs.service";
 import { TvsController } from "./tvs/tvs.controller";
@@ -14,7 +13,6 @@ import { MoviesController } from "./movies/movies.controller";
 
 @Module({
   imports: [
-    forwardRef(() => ProcessingModule),
     forwardRef(() => IdentityModule),
     HttpModule,
     TmdbModule,
