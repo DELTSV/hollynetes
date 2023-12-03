@@ -49,7 +49,7 @@ export const defaultConfig: ConfigEnvironmentDto = {
   HF_MAILS_USER_TAG: "HollyFilms",
 
   // Admin
-  HF_ADMIN_EMAIL: "admin@hollyfilms.fr",
+  HF_ADMIN_EMAIL: "admin@hollynetes.fr",
   HF_ADMIN_PASSWORD: "admin",
 
   // TMDB

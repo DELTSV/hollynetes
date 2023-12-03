@@ -31,7 +31,7 @@
 | HF_MAILS_USER | noreply@hollyfilms.fr | Mail user | isEmail, isString | No |
 | HF_MAILS_PASSWORD | default | Mail password | isString | Yes |
 | HF_MAILS_USER_TAG | HollyFilms | Mail user tag | isString | No |
-| HF_ADMIN_EMAIL | admin@hollyfilms.fr | Admin email | isEmail, isString | No |
+| HF_ADMIN_EMAIL | admin@hollynetes.fr | Admin email | isEmail, isString | No |
 | HF_ADMIN_PASSWORD | admin | Admin password | isString | Yes |
 | HF_TMDB_API_KEY |  | TMBD api key | isString | Yes |
 | HF_TMDB_API_URL | https://api.themoviedb.org/3 | TMBD api url | isString | No |
@@ -45,4 +45,4 @@
 | HF_GOOGLE_AUTH_CLIENT_ID |  | OAuth client id | isString | No |
 | HF_GOOGLE_AUTH_CLIENT_SECRET |  | OAuth client secret | isString | Yes |
 
-Generated on 20/03/2023 02:51:33
+Generated on 03/12/2023 17:17:33
