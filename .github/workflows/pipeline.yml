@@ -186,7 +186,7 @@ jobs:
           mkdir -p certs
           echo "${{ env.CERT_CRT }}" > certs/server.crt
           echo "${{ env.CERT_KEY }}" > certs/server.key
-        working-directory: ${{ env.WORKING_DIRECTORY }}
+        working-directory: ${{ env.WORKING_DIRECTORY }}/ingress
 
       - name: Terraform Validate
         id: validate

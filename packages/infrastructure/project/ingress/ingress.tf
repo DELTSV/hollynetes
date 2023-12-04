@@ -34,9 +34,9 @@ resource "kubernetes_ingress_v1" "app_ingress" {
 
           backend {
             service {
-              name = kubernetes_service.backend.metadata[0].name
+              name = var.backend_service_name
               port {
-                number = kubernetes_service.backend.spec[0].port[0].port
+                number = var.backend_service_port
               }
             }
           }
@@ -48,9 +48,9 @@ resource "kubernetes_ingress_v1" "app_ingress" {
 
           backend {
             service {
-              name = kubernetes_service.frontend.metadata[0].name
+              name = var.frontend_service_name
               port {
-                number = kubernetes_service.frontend.spec[0].port[0].port
+                number = var.frontend_service_port
               }
             }
           }

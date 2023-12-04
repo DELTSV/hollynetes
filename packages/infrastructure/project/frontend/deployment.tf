@@ -29,7 +29,7 @@ resource "kubernetes_deployment" "frontend" {
         }
 
         container {
-          image = var.frontend_image
+          image = var.image
           name  = "frontend-container"
 
           volume_mount {

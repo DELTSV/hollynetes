@@ -4,6 +4,6 @@ resource "kubernetes_config_map" "nginx_frontend_website_config" {
   }
 
   data = {
-    "default.conf" = file("${path.module}/config/nginx-frontend-website.conf")
+    "default.conf" = file("${path.module}/config/nginx-website.conf")
   }
 }

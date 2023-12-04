@@ -21,7 +21,7 @@ resource "kubernetes_deployment" "backend" {
 
       spec {
         container {
-          image = var.backend_image
+          image = var.image
           name  = "backend-container"
 
           port {
@@ -56,7 +56,7 @@ resource "kubernetes_deployment" "backend" {
 
           env {
             name  = "HF_DB_HOST"
-            value = "mongodb.default.svc.cluster.local"
+            value = var.database_dns_name
           }
 
           env {
