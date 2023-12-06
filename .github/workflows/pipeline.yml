@@ -18,8 +18,6 @@ env:
   TF_VAR_mongo_root_password: ${{ secrets.MONGO_ROOT_PASSWORD }}
   AWS_ACCESS_KEY_ID: ${{ secrets.SCW_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.SCW_ACCESS_KEY }}
-  CERT_CRT: ${{ secrets.CERT_CRT }}
-  CERT_KEY: ${{ secrets.CERT_KEY }}
 
 jobs:
   frontend:
@@ -180,13 +178,6 @@ jobs:
         id: init
         run: terraform init
         working-directory: ${{ env.WORKING_DIRECTORY }}
-
-      - name: Creating certificate
-        run: |
-          mkdir -p certs
-          echo "${{ env.CERT_CRT }}" > certs/server.crt
-          echo "${{ env.CERT_KEY }}" > certs/server.key
-        working-directory: ${{ env.WORKING_DIRECTORY }}/ingress
 
       - name: Terraform Validate
         id: validate

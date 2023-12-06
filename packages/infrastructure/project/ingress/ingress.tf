@@ -13,6 +13,7 @@ resource "kubernetes_ingress_v1" "app_ingress" {
       "nginx.ingress.kubernetes.io/ssl-redirect"    = "true"
       "nginx.ingress.kubernetes.io/ssl-passthrough" = "false"
       "nginx.ingress.kubernetes.io/use-regex"       = "true"
+      "cert-manager.io/cluster-issuer"              = var.tls_cert_issuer_name
     }
   }
 
@@ -21,7 +22,7 @@ resource "kubernetes_ingress_v1" "app_ingress" {
 
     tls {
       hosts       = [var.domain_name]
-      secret_name = kubernetes_secret.tls_cert.metadata[0].name
+      secret_name = var.tls_cert_private_key_secret_name
     }
 
     rule {

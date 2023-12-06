@@ -1,11 +1,12 @@
-
 module "ingress" {
-  source                = "./ingress"
-  backend_service_name  = module.backend.service_name
-  backend_service_port  = module.backend.service_port
-  domain_name           = var.domain_name
-  frontend_service_name = module.frontend.service_name
-  frontend_service_port = module.frontend.service_port
+  source                           = "./ingress"
+  backend_service_name             = module.backend.service_name
+  backend_service_port             = module.backend.service_port
+  domain_name                      = var.domain_name
+  frontend_service_name            = module.frontend.service_name
+  frontend_service_port            = module.frontend.service_port
+  tls_cert_private_key_secret_name = module.tls_cert.private_key_secret_name
+  tls_cert_issuer_name             = module.tls_cert.issuer_name
 }
 
 module "backend" {
@@ -35,4 +36,8 @@ module "database" {
 
 module "kapsule" {
   source = "./kapsule"
+}
+
+module "tls_cert" {
+  source = "./tls-cert"
 }

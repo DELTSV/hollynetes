@@ -19,3 +19,9 @@ provider "kubernetes" {
   cluster_ca_certificate = module.kapsule.ca_certificate
 }
 
+provider "kubectl" {
+  host                   = module.kapsule.host
+  token                  = module.kapsule.token
+  cluster_ca_certificate = module.kapsule.ca_certificate
+  load_config_file       = false
+}

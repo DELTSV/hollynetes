@@ -9,6 +9,9 @@ terraform {
     helm = {
       source = "hashicorp/helm"
     }
+    kubectl = {
+      source = "gavinbunney/kubectl"
+    }
   }
 
   backend "s3" {
