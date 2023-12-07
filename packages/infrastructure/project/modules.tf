@@ -21,6 +21,7 @@ module "backend" {
   database_dns_name               = module.database.dns_name
   redis_password_secret_name      = module.cache.redis_password_secret_name
   mongo_root_password_secret_name = module.database.mongodb_root_password_secret_name
+  cache_dns_name                  = module.cache.dns_name
 }
 
 module "frontend" {

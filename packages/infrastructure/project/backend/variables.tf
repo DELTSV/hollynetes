@@ -42,3 +42,9 @@ variable "database_dns_name" {
     type = string
     description = "DNS name for the database"
 }
+
+variable "cache_dns_name" {
+  type = string
+  description = "DNS name for the Redis cache"
+}
+

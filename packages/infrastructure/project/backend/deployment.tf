@@ -57,6 +57,11 @@ resource "kubernetes_deployment" "backend" {
           }
 
           env {
+            name  = "HF_REDIS_HOST"
+            value = var.cache_dns_name
+          }
+
+          env {
             name  = "HF_APP_PORT"
             value = 3000
           }

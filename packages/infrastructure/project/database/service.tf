@@ -1,4 +1,4 @@
-resource "kubernetes_service" "mongodb-headless" {
+resource "kubernetes_service" "mongodb_headless" {
   metadata {
     name = "mongodb"
   }

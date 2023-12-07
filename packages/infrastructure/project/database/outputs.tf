@@ -1,5 +1,5 @@
 output "dns_name" {
-  value = "${kubernetes_service.mongodb-headless.metadata.0.name}.${kubernetes_service.mongodb-headless.metadata.0.namespace}"
+  value = "${kubernetes_service.mongodb_headless.metadata.0.name}.${kubernetes_service.mongodb_headless.metadata.0.namespace}"
 }
 
 output "mongodb_root_password_secret_name" {
