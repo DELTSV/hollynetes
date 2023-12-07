@@ -73,3 +73,9 @@ variable "redis_password" {
   description = "Redis password"
   sensitive   = true
 }
+
+variable "issuer_email" {
+  type        = string
+  description = "Email address to use for the certificate issuer."
+  sensitive   = true
+}

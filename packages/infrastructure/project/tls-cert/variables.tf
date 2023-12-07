@@ -9,3 +9,8 @@ variable "private_key_secret_name" {
   default = "letsencrypt-cert-private-key"
   description = "The name of the secret containing the private key"
 }
+
+variable "issuer_email" {
+  type = string
+  description = "The email address to use for the certificate"
+}

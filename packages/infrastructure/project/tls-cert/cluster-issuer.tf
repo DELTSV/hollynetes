@@ -8,7 +8,7 @@ resource "kubectl_manifest" "clusterissuer_letsencrypt" {
     }
     spec = {
       acme = {
-        email = "lvandenbossche.jouvet@email.com"
+        email = var.issuer_email
         privateKeySecretRef = {
           name = var.private_key_secret_name
         }

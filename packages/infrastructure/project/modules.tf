@@ -61,6 +61,8 @@ module "kapsule" {
 module "tls_cert" {
   source = "./tls-cert"
 
+  issuer_email = var.issuer_email
+
   depends_on = [
     module.kapsule,
   ]
