@@ -9,7 +9,6 @@ import { SignUpComponent } from './auth/sign-up/sign-up.component';
 import { PageNotFoundComponent } from './navigation/page-not-found/page-not-found.component';
 import { AuthGuardService as AuthGuard } from './auth/auth.guard';
 import { AdminGuardService as AdminGuard } from './admin/admin.guard';
-import { PlayerComponent } from './player/player.component';
 import { AdminMediasComponent } from './admin/admin-medias/admin-medias.component';
 import { AdminUsersComponent } from './admin/admin-users/admin-users.component';
 import { SearchResultsComponent } from './pages/search-results/search-results.component';
@@ -18,6 +17,7 @@ import { NotActivatedComponent } from './navigation/not-activated/not-activated.
 import { AlreadyActivatedGuard } from './auth/already-activated.guard';
 import { MyListComponent } from './pages/my-list/my-list.component';
 import { CategoryResultsComponent } from './pages/category-results/category-results.component';
+import { IllegalComponent } from "./player/illegal.component";
 
 const routes: Routes = [
   {
@@ -96,13 +96,8 @@ const routes: Routes = [
     component: SignUpComponent,
   },
   {
-    path: 'play/:mediaId',
-    component: PlayerComponent,
-    canActivate: [AuthGuard, ActivatedGuard],
-  },
-  {
-    path: 'play/:mediaId/:seasonIndex/:episodeIndex',
-    component: PlayerComponent,
+    path: 'illegal',
+    component: IllegalComponent,
     canActivate: [AuthGuard, ActivatedGuard],
   },
   { path: '**', redirectTo: 'not-found' },

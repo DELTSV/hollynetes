@@ -11,15 +11,14 @@ import { AuthModule } from './auth/auth.module';
 import { AdminModule } from './admin/admin.module';
 import { interceptors } from './api/interceptors';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { PlayerComponent } from './player/player.component';
 import { NgChartsModule } from 'ng2-charts';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
-import { PlayNextMediaComponent } from './player/play-next-media/play-next-media.component';
 import { UserModule } from './user/user.module';
+import { IllegalComponent } from "./player/illegal.component";
 
 @NgModule({
-  declarations: [AppComponent, PlayerComponent, PlayNextMediaComponent],
+  declarations: [AppComponent, IllegalComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

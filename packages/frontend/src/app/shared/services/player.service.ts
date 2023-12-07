@@ -94,11 +94,8 @@ export class PlayerService {
 
   navigate() {
     if (this.playerData) {
-      const { seasonIndex, episodeIndex, mediaId } = this.playerData;
       this.router.navigate([
-        '/play',
-        mediaId,
-        ...(seasonIndex && episodeIndex ? [seasonIndex, episodeIndex] : []),
+        '/illegal',
       ]);
     }
     this.playerData = null;
