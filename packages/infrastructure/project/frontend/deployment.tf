@@ -4,8 +4,6 @@ resource "kubernetes_deployment" "frontend" {
   }
 
   spec {
-    replicas = 3
-
     selector {
       match_labels = {
         app = "frontend"
@@ -39,6 +37,18 @@ resource "kubernetes_deployment" "frontend" {
 
           port {
             container_port = 80
+          }
+
+          resources {
+            limits = {
+              cpu    = "500m"
+              memory = "128Mi"
+            }
+
+            requests = {
+              cpu    = "250m"
+              memory = "48Mi"
+            }
           }
         }
       }

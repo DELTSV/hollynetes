@@ -5,7 +5,6 @@ resource "kubernetes_stateful_set" "redis_cluster" {
 
   spec {
     service_name = "redis-cluster"
-    replicas    = 3
 
     selector {
       match_labels = {
@@ -74,6 +73,18 @@ resource "kubernetes_stateful_set" "redis_cluster" {
           port {
             container_port = 6379
             name           = "client"
+          }
+
+          resources {
+            limits = {
+              cpu    = "500m"
+              memory = "128Mi"
+            }
+
+            requests = {
+              cpu    = "250m"
+              memory = "48Mi"
+            }
           }
 
           volume_mount {

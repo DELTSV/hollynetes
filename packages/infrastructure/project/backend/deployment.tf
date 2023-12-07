@@ -4,8 +4,6 @@ resource "kubernetes_deployment" "backend" {
   }
 
   spec {
-    replicas = 3
-
     selector {
       match_labels = {
         app = "backend"
@@ -26,6 +24,18 @@ resource "kubernetes_deployment" "backend" {
 
           port {
             container_port = 3000
+          }
+
+          resources {
+            limits = {
+              cpu    = "500m"
+              memory = "512Mi"
+            }
+
+            requests = {
+              cpu    = "250m"
+              memory = "256Mi"
+            }
           }
 
           env_from {
@@ -105,3 +115,4 @@ resource "kubernetes_deployment" "backend" {
     }
   }
 }
+
