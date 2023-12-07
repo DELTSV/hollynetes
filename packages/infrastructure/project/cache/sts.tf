@@ -110,7 +110,7 @@ resource "kubernetes_stateful_set" "redis_cluster" {
 
         resources {
           requests = {
-            storage = "500Mi"
+            storage = "1Gi"
           }
         }
       }

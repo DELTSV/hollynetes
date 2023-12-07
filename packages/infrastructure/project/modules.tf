@@ -7,6 +7,12 @@ module "ingress" {
   frontend_service_port            = module.frontend.service_port
   tls_cert_private_key_secret_name = module.tls_cert.private_key_secret_name
   tls_cert_issuer_name             = module.tls_cert.issuer_name
+
+  depends_on = [
+    module.backend,
+    module.frontend,
+    module.tls_cert,
+  ]
 }
 
 module "backend" {
@@ -22,18 +28,30 @@ module "backend" {
   redis_password_secret_name      = module.cache.redis_password_secret_name
   mongo_root_password_secret_name = module.database.mongodb_root_password_secret_name
   cache_dns_name                  = module.cache.dns_name
+
+  depends_on = [
+    module.kapsule,
+  ]
 }
 
 module "frontend" {
   source = "./frontend"
 
   image = var.frontend_image
+
+  depends_on = [
+    module.kapsule,
+  ]
 }
 
 module "database" {
   source = "./database"
 
   mongo_root_password = var.mongo_root_password
+
+  depends_on = [
+    module.kapsule,
+  ]
 }
 
 module "kapsule" {
@@ -42,13 +60,25 @@ module "kapsule" {
 
 module "tls_cert" {
   source = "./tls-cert"
+
+  depends_on = [
+    module.kapsule,
+  ]
 }
 
 module "metrics_logs" {
   source = "./metrics-logs"
+
+  depends_on = [
+    module.kapsule,
+  ]
 }
 
 module "cache" {
   source   = "./cache"
   password = var.redis_password
+
+  depends_on = [
+    module.kapsule,
+  ]
 }
