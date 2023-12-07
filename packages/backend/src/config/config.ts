@@ -23,6 +23,7 @@ export interface APIConfig extends BaseConfig {
   tmdb: TMDBConfig;
   medias: MediasConfig;
   googleOAuth: GoogleOAuthConfig;
+  redis: RedisConfig;
 }
 
 export interface CookieConfig {
@@ -86,6 +87,12 @@ export interface MediasConfig {
 export interface GoogleOAuthConfig {
   clientId: string;
   clientSecret: string;
+}
+
+export interface RedisConfig {
+  host: string;
+  port: number;
+  password: string;
 }
 
 export const getConfig = (env: Record<string, unknown>): APIConfig => {
@@ -152,5 +159,10 @@ export const getConfig = (env: Record<string, unknown>): APIConfig => {
       clientId: config.HF_GOOGLE_AUTH_CLIENT_ID,
       clientSecret: config.HF_GOOGLE_AUTH_CLIENT_SECRET,
     },
+    redis: {
+      host: config.HF_REDIS_HOST,
+      port: config.HF_REDIS_PORT,
+      password: config.HF_REDIS_PASSWORD,
+    }
   };
 };

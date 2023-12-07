@@ -12,14 +12,15 @@ module "ingress" {
 module "backend" {
   source = "./backend"
 
-  image                     = var.backend_image
-  tmdb_api_key              = var.backend_tmdb_api_key
-  google_auth_client_id     = var.backend_google_auth_client_id
-  google_auth_client_secret = var.backend_google_auth_client_secret
-  admin_password            = var.backend_admin_password
-  jwt_secret                = var.backend_jwt_secret
-  mongo_root_password       = var.mongo_root_password
-  database_dns_name         = module.database.dns_name
+  image                           = var.backend_image
+  tmdb_api_key                    = var.backend_tmdb_api_key
+  google_auth_client_id           = var.backend_google_auth_client_id
+  google_auth_client_secret       = var.backend_google_auth_client_secret
+  admin_password                  = var.backend_admin_password
+  jwt_secret                      = var.backend_jwt_secret
+  database_dns_name               = module.database.dns_name
+  redis_password_secret_name      = module.cache.redis_password_secret_name
+  mongo_root_password_secret_name = module.database.mongodb_root_password_secret_name
 }
 
 module "frontend" {
@@ -40,4 +41,13 @@ module "kapsule" {
 
 module "tls_cert" {
   source = "./tls-cert"
+}
+
+module "metrics_logs" {
+  source = "./metrics-logs"
+}
+
+module "cache" {
+  source   = "./cache"
+  password = var.redis_password
 }

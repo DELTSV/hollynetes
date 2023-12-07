@@ -34,9 +34,14 @@ resource "kubernetes_stateful_set" "mongodb" {
             name       = "mongodb"
           }
 
-          env_from {
-            secret_ref {
-              name = kubernetes_secret.mongodb_env_secrets.metadata[0].name
+          env {
+            name = "MONGO_INITDB_ROOT_PASSWORD"
+
+            value_from {
+              secret_key_ref {
+                name = kubernetes_secret.mongodb_root_password.metadata[0].name
+                key  = "mongo-root-password"
+              }
             }
           }
 

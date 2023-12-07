@@ -35,6 +35,28 @@ resource "kubernetes_deployment" "backend" {
           }
 
           env {
+            name = "HF_DB_PASSWORD"
+
+            value_from {
+              secret_key_ref {
+                name = var.mongo_root_password_secret_name
+                key  = "mongo-root-password"
+              }
+            }
+          }
+
+          env {
+            name = "HF_REDIS_PASSWORD"
+
+            value_from {
+              secret_key_ref {
+                name = var.redis_password_secret_name
+                key  = "redis-password"
+              }
+            }
+          }
+
+          env {
             name  = "HF_APP_PORT"
             value = 3000
           }

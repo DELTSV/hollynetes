@@ -289,4 +289,23 @@ export class ConfigEnvironmentDto {
   @Secret()
   @Desc("OAuth client secret")
   HF_GOOGLE_AUTH_CLIENT_SECRET: string;
+
+  @ConfigValidator(isString)
+  @Expose()
+  @UseDefault()
+  @Desc("Redis cache host")
+  HF_REDIS_HOST: string;
+
+  @ConfigValidator(isNumber)
+  @Expose()
+  @UseDefault()
+  @Desc("Redis cache port number")
+  HF_REDIS_PORT: number;
+
+  @ConfigValidator(isString)
+  @Expose()
+  @UseDefault()
+  @Desc("Redis cache password")
+  @Secret()
+  HF_REDIS_PASSWORD: string;
 }

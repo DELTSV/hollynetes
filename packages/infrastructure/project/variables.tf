@@ -34,31 +34,42 @@ variable "frontend_image" {
 }
 
 variable "backend_tmdb_api_key" {
-  type      = string
-  sensitive = true
+  type        = string
+  description = "TMDB API key"
+  sensitive   = true
 }
 
 variable "backend_admin_password" {
-  type      = string
-  sensitive = true
+  type        = string
+  description = "Admin password"
+  sensitive   = true
 }
 
 variable "backend_google_auth_client_id" {
-  type      = string
-  sensitive = true
+  type        = string
+  description = "Google Auth client ID"
+  sensitive   = true
 }
 
 variable "backend_google_auth_client_secret" {
-  type      = string
-  sensitive = true
+  type        = string
+  description = "Google Auth client secret"
+  sensitive   = true
 }
 
 variable "mongo_root_password" {
-  type      = string
-  sensitive = true
+  type        = string
+  description = "Mongo root password"
+  sensitive   = true
 }
 
 variable "backend_jwt_secret" {
   type      = string
   sensitive = true
+}
+
+variable "redis_password" {
+  type        = string
+  description = "Redis password"
+  sensitive   = true
 }

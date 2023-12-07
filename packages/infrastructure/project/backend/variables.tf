@@ -23,9 +23,14 @@ variable "admin_password" {
     description = "Admin password for the application"
 }
 
-variable "mongo_root_password" {
+variable "mongo_root_password_secret_name" {
     type = string
-    description = "MongoDB root password"
+    description = "Name of the secret containing the root password for MongoDB"
+}
+
+variable "redis_password_secret_name" {
+  type = string
+  description = "Name of the secret containing the password for Redis"
 }
 
 variable "jwt_secret" {

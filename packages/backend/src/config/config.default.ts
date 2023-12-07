@@ -10,7 +10,7 @@ export enum Environment {
 export const defaultConfig: ConfigEnvironmentDto = {
   HF_APP_PORT: 3000,
   HF_APP_ENV: Environment.DEV,
-  HF_APP_VERBOSE: false,
+  HF_APP_VERBOSE: true,
   HF_APP_URLS_WHITELIST: ["http://localhost:4200", "http://localhost:8080"],
   HF_APP_FRONTEND_URL: "http://localhost:4200",
   HF_APP_LOGS_PATH: "./logs/hollyfilms.log",
@@ -68,4 +68,8 @@ export const defaultConfig: ConfigEnvironmentDto = {
   // Google OAuth
   HF_GOOGLE_AUTH_CLIENT_ID: null,
   HF_GOOGLE_AUTH_CLIENT_SECRET: null,
+
+  HF_REDIS_HOST: "localhost",
+  HF_REDIS_PORT: 6379,
+  HF_REDIS_PASSWORD: null,
 };

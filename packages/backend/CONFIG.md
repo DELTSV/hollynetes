@@ -6,7 +6,7 @@
 |:--- | :--- | :--- | :--- | :---|
 | HF_APP_PORT | 3000 | Port to listen on | isPortNumber | No |
 | HF_APP_ENV | dev | Environment to run in | isEnum | No |
-| HF_APP_VERBOSE | false | Enable debug mode | isBoolean | No |
+| HF_APP_VERBOSE | true | Enable debug mode | isBoolean | No |
 | HF_APP_URLS_WHITELIST | http://localhost:4200, http://localhost:8080 | List of urls to proxy | isUrlArray | No |
 | HF_APP_FRONTEND_URL | http://localhost:4200 | Path of the frontend | isString | No |
 | HF_APP_LOGS_PATH | ./logs/hollyfilms.log | Path of the logs | isString | No |
@@ -44,5 +44,8 @@
 | HF_MEDIAS_FILES_PATH | ../../data/medias_files | Path where the videos files are stored before upload | isString | No |
 | HF_GOOGLE_AUTH_CLIENT_ID |  | OAuth client id | isString | No |
 | HF_GOOGLE_AUTH_CLIENT_SECRET |  | OAuth client secret | isString | Yes |
+| HF_REDIS_HOST | localhost | Redis cache host | isString | No |
+| HF_REDIS_PORT | 6379 | Redis cache port number | isNumber | No |
+| HF_REDIS_PASSWORD |  | Redis cache password | isString | Yes |
 
-Generated on 03/12/2023 18:43:04
+Generated on 07/12/2023 14:24:55

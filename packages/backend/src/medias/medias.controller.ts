@@ -1,11 +1,14 @@
 import {
+  CACHE_MANAGER,
+  CacheKey,
+  CacheTTL,
   Controller,
   Delete,
   Get,
-  Headers,
+  Headers, Inject,
   Param,
   Query,
-  Res,
+  Res, UseInterceptors,
 } from "@nestjs/common";
 
 import { MediasService } from "./medias.service";
@@ -22,11 +25,15 @@ import { SearchQueryDto } from "./dto/search.query.dto";
 import { checkObjectId } from "../shared/mongoose";
 import { Public } from "../shared/decorators/public.decorator";
 import { Location } from "./medias.service";
+import { CacheInterceptor } from "@nestjs/cache-manager";
+import { Cache } from "cache-manager";
 
 @ApiTags("Medias")
 @Controller("medias")
 export class MediasController {
-  constructor(private readonly mediasService: MediasService) {}
+  constructor(private readonly mediasService: MediasService, @Inject(CACHE_MANAGER) private cacheService: Cache,) {}
+
+  alreadyCached = false;
 
   @Roles(Role.User)
   @Get()
@@ -81,6 +88,7 @@ export class MediasController {
     return this.mediasService.getFeatured(user);
   }
 
+  @UseInterceptors(CacheInterceptor)
   @Public()
   @Get("showcase")
   @ApiOperation({ summary: "[User] Get all minified medias" })
